@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const mysqlConection = require('../conection/conection')
+const mysqlConection = require('../conection/conection');
+const bcrypt = require('bcrypt');
+
 
 const secretKey = '9070N_C0_see?#';
 
@@ -77,14 +79,20 @@ router.post('/signin',(req, res)=>{
     (err,rows,fields)=>{
 
         if(!err){
+            let message  ='';
             console.log(rows);
+            let resultadoL = {message, rows}
             if(rows.length==0){
+                message  ='No existe el usuario';
                 console.log('No existe el usuario');
+                
+                res.status(404).json(resultadoL);
             }else{
-                console.log('exisyte el usuario');
+                message  ='Se encontro al usuario exitosamente!';
+                console.log('existe el usuario');
+                const resultadoL = {message, rows}
+                res.status(200).json(resultadoL);
             }
-            
-            res.json(rows)
         }else{
             console.log(err);
         }
